@@ -1,3 +1,3 @@
-module leetcode
+module github.com/sywc670/leetcodeSolutions
 
-go 1.21.0
+go 1.22

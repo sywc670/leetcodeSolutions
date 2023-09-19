@@ -64,3 +64,72 @@ func isBalanced(root *TreeNode) bool {
 	}
 	return false
 }
+func isBalancedV2(root *TreeNode) bool {
+	var getHeight func(node *TreeNode) int
+	getHeight = func(node *TreeNode) int {
+		if node == nil {
+			return 0
+		}
+		l := getHeight(node.Left)
+		r := getHeight(node.Right)
+		if l == -1 || r == -1 {
+			return -1
+		}
+		if sub := l - r; sub <= 1 && sub >= -1 {
+			return max(l, r) + 1
+		}
+		return -1
+	}
+	if getHeight(root) != -1 {
+		return true
+	}
+	return false
+}
+
+// 199. 二叉树的右视图
+// DFS
+func rightSideViewV1(root *TreeNode) (ans []int) {
+	var maxDepth int
+	var dfs func(node *TreeNode, maxDepth int)
+	dfs = func(node *TreeNode, depth int) {
+		if node == nil {
+			return
+		}
+		if depth > maxDepth {
+			ans = append(ans, node.Val)
+			maxDepth++
+		}
+		dfs(node.Right, depth+1)
+		dfs(node.Left, depth+1)
+	}
+	dfs(root, 1)
+	return
+}
+
+// lc 235
+func lowestCommonAncestorV1(root, p, q *TreeNode) *TreeNode {
+	v := root.Val
+	if p.Val > v && q.Val > v {
+		return lowestCommonAncestorV1(root.Right, p, q)
+	}
+	if p.Val < v && q.Val < v {
+		return lowestCommonAncestorV1(root.Left, p, q)
+	}
+	return root
+}
+
+// 236. 二叉树的最近公共祖先
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+	if root == nil || root == p || root == q {
+		return root
+	}
+	left := lowestCommonAncestor(root.Left, p, q)
+	right := lowestCommonAncestor(root.Right, p, q)
+	if left == nil {
+		return right
+	}
+	if right == nil {
+		return left
+	}
+	return root
+}

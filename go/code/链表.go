@@ -8,6 +8,7 @@ type ListNode struct {
 // trick: dummynode or sentry
 
 // lc 206
+// 头插法
 func reverseList(head *ListNode) *ListNode {
 	h := new(ListNode)
 	for p := head; p != nil; {
@@ -17,6 +18,35 @@ func reverseList(head *ListNode) *ListNode {
 		p = tmp
 	}
 	return h.Next
+}
+
+// 迭代 反转指针
+func reverseListV2(head *ListNode) *ListNode {
+	cur := head
+	var pre *ListNode
+	for cur != nil {
+		tmp := cur.Next
+		cur.Next = pre
+		pre = cur
+		cur = tmp
+	}
+	return pre
+}
+
+// 递归
+func reverseListV3(head *ListNode) *ListNode {
+	var recur func(*ListNode, *ListNode) *ListNode
+	recur = func(cur, pre *ListNode) *ListNode {
+		if cur == nil {
+			// 终止条件，返回反转后的头结点，其实就是反转前最后一个节点
+			return pre
+		}
+		res := recur(cur.Next, cur)
+		// 当前操作，将当前节点指向上一个节点以反转
+		cur.Next = pre
+		return res
+	}
+	return recur(head, nil)
 }
 
 // lc 92
@@ -66,8 +96,22 @@ func reverseBetweenV2(head *ListNode, left int, right int) *ListNode {
 	return dummy.Next
 }
 
-// lc 25
-func reverseKGroup(head *ListNode, k int) *ListNode {
-	// TODO: 用上一题的代码修改
+// 328. 奇偶链表
+// 未掌握
+// solve:巧妙的点在于每次走了两步，但是判断是否为空却不是那两步，最后一步放在下一次循环里面进行判断
+func oddEvenList(head *ListNode) *ListNode {
+	if head == nil {
+		return nil
+	}
+	evenhead := head.Next
+	eventail := evenhead
+	oddtail := head
+	for eventail != nil && eventail.Next != nil {
+		oddtail.Next = eventail.Next
+		oddtail = oddtail.Next
+		eventail.Next = oddtail.Next
+		eventail = eventail.Next
+	}
+	oddtail.Next = evenhead
 	return head
 }

@@ -1,6 +1,9 @@
 package code
 
-import "sort"
+import (
+	"math"
+	"sort"
+)
 
 // lc 167
 func twoSum(numbers []int, target int) []int {
@@ -51,6 +54,95 @@ func threeSum(nums []int) (ans [][]int) {
 		}
 	}
 	return ans
+}
+
+// lc 16
+func threeSumClosest(nums []int, target int) (ans int) {
+	delta := math.MaxInt
+	sort.Ints(nums)
+	n := len(nums)
+	if nums[0]+nums[1]+nums[2] >= target {
+		return nums[0] + nums[1] + nums[2]
+	}
+	if nums[n-1]+nums[n-2]+nums[n-3] <= target {
+		return nums[n-1] + nums[n-2] + nums[n-3]
+	}
+	abs := func(x int) int {
+		if x < 0 {
+			return -x
+		}
+		return x
+	}
+	for i, x := range nums[:n-2] {
+		j, k := i+1, n-1
+		for j < k {
+			sum := x + nums[j] + nums[k]
+			sub := sum - target
+			if abs(sub) < abs(delta) {
+				delta = sub
+			}
+			if sub < 0 {
+				j++
+				continue
+			}
+			k--
+		}
+	}
+	return delta + target
+}
+
+// lc 18
+func fourSum(nums []int, target int) (ans [][]int) {
+	sort.Ints(nums)
+	n := len(nums)
+	if n < 4 {
+		return
+	}
+	for i, x := range nums[:n-3] {
+		if i > 0 && x == nums[i-1] {
+			continue
+		}
+		if x+nums[i+1]+nums[i+2]+nums[i+3] > target {
+			break
+		}
+		if x+nums[n-1]+nums[n-2]+nums[n-3] < target {
+			continue
+		}
+		for j := i + 1; j < n-2; j++ {
+			y := nums[j]
+			// for j, y := range nums[i+1 : n-2] {
+			// 这里不能用range是因为j的下标会从0开始，而不是从i+1开始
+			if j > i+1 && y == nums[j-1] {
+				continue
+			}
+			if x+y+nums[j+1]+nums[j+2] > target {
+				break
+			}
+			if x+y+nums[n-1]+nums[n-2] < target {
+				continue
+			}
+			k, m := j+1, n-1
+			for k < m {
+				sum := x + y + nums[k] + nums[m]
+				if sum > target {
+					m--
+				} else if sum < target {
+					k++
+				} else {
+					ans = append(ans, []int{x, y, nums[k], nums[m]})
+					m--
+					for k < m && nums[m] == nums[m+1] {
+						m--
+					}
+					k++
+					for k < m && nums[k-1] == nums[k] {
+						k++
+					}
+				}
+			}
+		}
+	}
+	return
 }
 
 // lc 11
