@@ -73,7 +73,7 @@ func subsetsV2(nums []int) (ans [][]int) {
 
 // lc 131
 // 思路：枚举第x个位置是否会隔开，枚举的字符串开头为i，结尾为j，判断是否回文
-// TODO: 如果用选与不选来做需要给dfs额外传入开始位置下标
+// Option: 如果用选与不选来做需要给dfs额外传入开始位置下标
 func partition(s string) (ans [][]string) {
 	n := len(s)
 	cur := make([]string, 0, n)
