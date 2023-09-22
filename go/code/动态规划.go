@@ -2,6 +2,61 @@ package code
 
 import "math"
 
+// lc 198
+// 记忆化搜索/回溯
+func rob(nums []int) int {
+	n := len(nums)
+	cache := make([]int, n)
+	for i := range cache {
+		cache[i] = -1
+	}
+	var dfs func(i int) int
+	dfs = func(i int) (res int) {
+		if i < 0 {
+			return 0
+		}
+		C := &cache[i]
+		if *C != -1 {
+			return *C
+		}
+		defer func() {
+			*C = res
+		}()
+		return max(dfs(i-2)+nums[i], dfs(i-1))
+	}
+	return dfs(n - 1)
+}
+
+// 递推
+func robV2(nums []int) int {
+	n := len(nums)
+	if n == 1 {
+		return nums[0]
+	}
+	dp := make([]int, n+2)
+	dp[0], dp[1] = 0, 0
+	for i, v := range nums {
+		dp[i+2] = max(dp[i]+v, dp[i+1])
+	}
+	return dp[n+1]
+}
+
+// 递推优化
+func robV3(nums []int) int {
+	n := len(nums)
+	if n == 1 {
+		return nums[0]
+	}
+	f0, f1 := 0, 0
+	var f int
+	for _, v := range nums {
+		f = max(f0+v, f1)
+		f0 = f1
+		f1 = f
+	}
+	return f
+}
+
 // lc 516
 func longestPalindromeSubseq(s string) int {
 	n := len(s)
@@ -109,7 +164,7 @@ func longestPath(parent []int, s string) (ans int) {
 }
 
 // lc 337
-func rob(root *TreeNode) (ans int) {
+func robV1(root *TreeNode) (ans int) {
 	var dfs func(*TreeNode) (int, int)
 	dfs = func(node *TreeNode) (int, int) {
 		if node == nil {
@@ -157,7 +212,7 @@ func minDistance(word1 string, word2 string) int {
 	return dfs(m-1, n-1)
 }
 
-// lc 1143
+// lc 1143 最长公共子序列
 func longestCommonSubsequence(text1 string, text2 string) int {
 	m, n := len(text1), len(text2)
 
@@ -186,6 +241,50 @@ func longestCommonSubsequence(text1 string, text2 string) int {
 		return max(dfs(i-1, j), dfs(i, j-1))
 	}
 	return dfs(m-1, n-1)
+}
+
+// dp
+func longestCommonSubsequenceV1(text1 string, text2 string) int {
+	m, n := len(text1), len(text2)
+	dp := make([][]int, m+1)
+	for i := range dp {
+		dp[i] = make([]int, n+1)
+	}
+	for i, t1 := range text1 {
+		for j, t2 := range text2 {
+			if t1 == t2 {
+				dp[i+1][j+1] = dp[i][j] + 1
+			} else {
+				dp[i+1][j+1] = max(dp[i+1][j], dp[i][j+1])
+			}
+		}
+	}
+	return dp[m][n]
+}
+
+// optimize
+func longestCommonSubsequenceV2(text1, text2 string) int {
+	n := len(text2)
+	dp := make([]int, n+1)
+	for _, t1 := range text1 {
+		pre := 0
+		// 这里使用pre是因为dp[i-1][j-1]会被覆盖掉，但也不用倒序，因为j-1距离j的值是固定的且为1
+		// 零一背包中是c-w[i]，距离是不固定的，所以最好使用倒序
+		for j, t2 := range text2 {
+			if t1 == t2 {
+				// 下面的赋值是语法糖，不是单纯的双双赋值，而是会有临时变量
+				// 如下：
+				// tmp := dp[j+1]
+				// dp[j+1] = pre+1
+				// pre = tmp
+				dp[j+1], pre = pre+1, dp[j+1]
+			} else {
+				pre = dp[j+1]
+				dp[j+1] = max(dp[j], dp[j+1])
+			}
+		}
+	}
+	return dp[n]
 }
 
 // lc 300
