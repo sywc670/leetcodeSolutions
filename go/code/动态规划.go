@@ -178,40 +178,6 @@ func robV1(root *TreeNode) (ans int) {
 	return max(dfs(root))
 }
 
-// lc 72
-func minDistance(word1 string, word2 string) int {
-	m, n := len(word1), len(word2)
-
-	cache := make([][]int, m)
-	for i := range cache {
-		cache[i] = make([]int, n)
-		for j := range cache[i] {
-			cache[i][j] = -1
-		}
-	}
-	var dfs func(i, j int) int
-	dfs = func(i, j int) (res int) {
-		if i < 0 {
-			return j + 1
-		}
-		if j < 0 {
-			return i + 1
-		}
-		c := &cache[i][j]
-		if *c != -1 {
-			return *c
-		}
-		defer func() {
-			*c = res
-		}()
-		if word1[i] == word2[j] {
-			return dfs(i-1, j-1)
-		}
-		return min(dfs(i-1, j), dfs(i, j-1), dfs(i-1, j-1)) + 1
-	}
-	return dfs(m-1, n-1)
-}
-
 // lc 1143 最长公共子序列
 func longestCommonSubsequence(text1 string, text2 string) int {
 	m, n := len(text1), len(text2)
@@ -267,12 +233,12 @@ func longestCommonSubsequenceV2(text1, text2 string) int {
 	n := len(text2)
 	dp := make([]int, n+1)
 	for _, t1 := range text1 {
-		pre := 0
+		pre := 0 // 初始值其实就是dp[0]，本题中pre的值与i无关，所以固定初始为0
 		// 这里使用pre是因为dp[i-1][j-1]会被覆盖掉，但也不用倒序，因为j-1距离j的值是固定的且为1
 		// 零一背包中是c-w[i]，距离是不固定的，所以最好使用倒序
 		for j, t2 := range text2 {
 			if t1 == t2 {
-				// 下面的赋值是语法糖，不是单纯的双双赋值，而是会有临时变量
+				// 下面的赋值是语法糖，前面的赋值不会影响后面的赋值，因为有临时变量
 				// 如下：
 				// tmp := dp[j+1]
 				// dp[j+1] = pre+1
@@ -281,6 +247,86 @@ func longestCommonSubsequenceV2(text1, text2 string) int {
 			} else {
 				pre = dp[j+1]
 				dp[j+1] = max(dp[j], dp[j+1])
+			}
+		}
+	}
+	return dp[n]
+}
+
+// lc 72
+func minDistance(word1 string, word2 string) int {
+	m, n := len(word1), len(word2)
+	cache := make([][]int, m)
+	for i := range cache {
+		cache[i] = make([]int, n)
+		for j := range cache[i] {
+			cache[i][j] = -1
+		}
+	}
+	var dfs func(i, j int) int
+	dfs = func(i, j int) (res int) {
+		if i < 0 {
+			return j + 1
+		}
+		if j < 0 {
+			return i + 1
+		}
+		c := &cache[i][j]
+		if *c != -1 {
+			return *c
+		}
+		defer func() {
+			*c = res
+		}()
+		if word1[i] == word2[j] {
+			return dfs(i-1, j-1)
+		}
+		return min(dfs(i-1, j), dfs(i, j-1), dfs(i-1, j-1)) + 1
+	}
+	return dfs(m-1, n-1)
+}
+
+// dp
+func minDistanceV1(word1 string, word2 string) int {
+	m, n := len(word1), len(word2)
+	dp := make([][]int, m+1)
+	for i := range dp {
+		dp[i] = make([]int, n+1)
+	}
+	// 转化为dp时，i、j的取值范围需要注意，由于为了不取零值，i、j范围分别为[1,m],[1,n]
+	for j := 1; j <= n; j++ {
+		dp[0][j] = j
+	}
+	for i, w1 := range word1 {
+		dp[i+1][0] = i + 1
+		for j, w2 := range word2 {
+			if w1 == w2 {
+				dp[i+1][j+1] = dp[i][j]
+			} else {
+				dp[i+1][j+1] = min(dp[i+1][j], dp[i][j+1], dp[i][j]) + 1
+			}
+		}
+	}
+	return dp[m][n]
+}
+
+// one slice dp
+func minDistanceV2(word1 string, word2 string) int {
+	n := len(word2)
+	dp := make([]int, n+1)
+	// 转化为dp时，i、j的取值范围需要注意，由于为了不取零值，i、j范围分别为[1,m],[1,n]
+	for j := 1; j <= n; j++ {
+		dp[j] = j
+	}
+	for _, w1 := range word1 {
+		// pre的值代表了word2为空后word1剩余i个字符的情况，从零将i增加
+		pre := dp[0]
+		dp[0]++
+		for j, w2 := range word2 {
+			if w1 == w2 {
+				dp[j+1], pre = pre, dp[j+1]
+			} else {
+				dp[j+1], pre = min(dp[j], dp[j+1], pre)+1, dp[j+1]
 			}
 		}
 	}
