@@ -1,7 +1,5 @@
 package code
 
-import "math"
-
 // lc 198
 // 记忆化搜索/回溯
 func rob(nums []int) int {
@@ -28,7 +26,7 @@ func rob(nums []int) int {
 }
 
 // 递推
-func robV2(nums []int) int {
+func robV1(nums []int) int {
 	n := len(nums)
 	if n == 1 {
 		return nums[0]
@@ -42,7 +40,7 @@ func robV2(nums []int) int {
 }
 
 // 递推优化
-func robV3(nums []int) int {
+func robV2(nums []int) int {
 	n := len(nums)
 	if n == 1 {
 		return nums[0]
@@ -55,127 +53,6 @@ func robV3(nums []int) int {
 		f1 = f
 	}
 	return f
-}
-
-// lc 516
-func longestPalindromeSubseq(s string) int {
-	n := len(s)
-	cache := make([][]int, n)
-	for i := range cache {
-		cache[i] = make([]int, n)
-		for j := range cache[i] {
-			cache[i][j] = -1
-		}
-	}
-	var dfs func(i, j int) int
-	dfs = func(i, j int) (res int) {
-		if i > j {
-			return 0
-		}
-		if i == j {
-			return 1
-		}
-		C := &cache[i][j]
-		if *C != -1 {
-			return *C
-		}
-		defer func() {
-			*C = res
-		}()
-		if s[i] == s[j] {
-			return dfs(i+1, j-1) + 2
-		}
-		return max(dfs(i+1, j), dfs(i, j-1))
-	}
-	return dfs(0, n-1)
-}
-
-type TreeNode struct {
-	Val   int
-	Left  *TreeNode
-	Right *TreeNode
-}
-
-// lc 543
-// 二叉树求最大值类型的题可能会用到遍历每个节点比较存储最大值的方法
-// 在顶点求链的值用加法，而子树求链的值用max比较，因为子树的链要过顶点必须不能分叉
-func diameterOfBinaryTree(root *TreeNode) int {
-	var ans int
-	var dfs func(*TreeNode) int
-	dfs = func(t *TreeNode) int {
-		if t == nil {
-			return -1
-		}
-		l := dfs(t.Left)
-		r := dfs(t.Right)
-		// return value is depth
-		ans = max(ans, l+r+2)
-		return max(l, r) + 1
-	}
-	dfs(root)
-	return ans
-}
-
-// lc 124
-// If the result of subtree is below zero
-// return zero because that result is not useful
-func maxPathSum(root *TreeNode) int {
-	ans := math.MinInt
-	var dfs func(*TreeNode) int
-	dfs = func(t *TreeNode) (res int) {
-		if t == nil {
-			return 0
-		}
-		l := dfs(t.Left)
-		r := dfs(t.Right)
-		res = max(l, r) + t.Val
-		ans = max(ans, l+r+t.Val)
-		if res < 0 {
-			return 0
-		}
-		return
-	}
-	dfs(root)
-	return ans
-}
-
-// lc 2246
-func longestPath(parent []int, s string) (ans int) {
-	n := len(parent)
-	g := make([][]int, n)
-	for i := 1; i < n; i++ {
-		pa := parent[i]
-		g[pa] = append(g[pa], i)
-	}
-
-	var dfs func(int) int
-	dfs = func(x int) (maxLen int) {
-		for _, y := range g[x] {
-			len := dfs(y) + 1
-			if s[y] != s[x] {
-				ans = max(ans, maxLen+len)
-				maxLen = max(maxLen, len)
-			}
-		}
-		return
-	}
-	dfs(0)
-	return ans + 1
-}
-
-// lc 337
-func robV1(root *TreeNode) (ans int) {
-	var dfs func(*TreeNode) (int, int)
-	dfs = func(node *TreeNode) (int, int) {
-		if node == nil {
-			return 0, 0
-		}
-		lRob, lNotRob := dfs(node.Left)
-		rRob, rNotRob := dfs(node.Right)
-		notRob := max(lRob, lNotRob) + max(rRob, rNotRob)
-		return lNotRob + rNotRob + node.Val, notRob
-	}
-	return max(dfs(root))
 }
 
 // lc 1143 最长公共子序列
@@ -334,6 +211,9 @@ func minDistanceV2(word1 string, word2 string) int {
 }
 
 // lc 300
+// 思路：1.枚举 子问题是以nums[i]结尾的子序列最长长度，枚举之前的所有nums[j]结尾的子序列，
+// 只要一个入参，选择枚举来做
+// 2.选与不选 会比较两个值的大小，所以需要两个入参
 func lengthOfLIS(nums []int) (ans int) {
 	n := len(nums)
 	memo := make([]int, n)
@@ -358,6 +238,23 @@ func lengthOfLIS(nums []int) (ans int) {
 	}
 	for i := range nums {
 		ans = max(ans, dfs(i))
+	}
+	return
+}
+
+// dp
+// note: 未完全掌握
+func lengthOfLISV1(nums []int) (ans int) {
+	n := len(nums)
+	dp := make([]int, n)
+	for i := range nums {
+		for j := range nums[:i] {
+			if nums[j] < nums[i] {
+				dp[i] = max(dp[i], dp[j])
+			}
+		}
+		dp[i]++
+		ans = max(ans, dp[i])
 	}
 	return
 }
