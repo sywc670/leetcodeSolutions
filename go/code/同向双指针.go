@@ -53,3 +53,45 @@ func lengthOfLongestSubstring(s string) (ans int) {
 	}
 	return
 }
+
+// lc 283
+func moveZeroes(nums []int) {
+	count := 0
+	for i, n := range nums {
+		if n != 0 {
+			nums[count] = n
+			if count != i {
+				nums[count] = 0
+			}
+			count++
+		}
+	}
+}
+
+// lc 438
+// 提示：数组和切片可以直接比较
+func findAnagrams(s string, p string) (ans []int) {
+	m, n := len(s), len(p)
+	if n > m {
+		return nil
+	}
+	left, right := 0, -1
+	sCount, pCount := [26]int{}, [26]int{}
+	for i, r := range p {
+		pCount[r-'a']++
+		sCount[s[i]-'a']++
+		right++
+	}
+	for right < m {
+		if sCount == pCount {
+			ans = append(ans, left)
+		}
+		sCount[s[left]-'a']--
+		left++
+		right++
+		if right < m {
+			sCount[s[right]-'a']++
+		}
+	}
+	return
+}
