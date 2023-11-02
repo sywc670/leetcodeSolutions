@@ -44,7 +44,7 @@ func lengthOfLongestSubstring(s string) (ans int) {
 	left := 0
 	set := make(map[byte]bool)
 	for right, current := range s {
-		for set[byte(current)] == true {
+		for set[byte(current)] {
 			set[byte(s[left])] = false
 			left++
 		}
