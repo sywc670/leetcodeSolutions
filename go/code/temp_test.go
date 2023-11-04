@@ -38,7 +38,7 @@ func Test_bestSeqAtIndex(t *testing.T) {
 		wantAns int
 	}{
 		// TODO: Add test cases.
-		// {name: "test1", args: args{height: []int{65, 70, 56, 75, 60, 68}, weight: []int{100, 150, 90, 190, 95, 110}}, wantAns: 6},
+		{name: "test1", args: args{height: []int{65, 70, 56, 75, 60, 68}, weight: []int{100, 150, 90, 190, 95, 110}}, wantAns: 6},
 		{name: "test2", args: args{height: []int{8378, 8535, 8998, 3766, 648, 6184, 5506, 5648, 3907, 6773}, weight: []int{9644, 849, 3232, 3259, 5229, 314, 5593, 9600, 6695, 4340}}, wantAns: 4},
 	}
 	for _, tt := range tests {

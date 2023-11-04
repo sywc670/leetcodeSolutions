@@ -53,6 +53,7 @@ func coinChange(coins []int, amount int) (ans int) {
 	}
 	return -1
 }
+
 func coinChangeV1(coins []int, amount int) (ans int) {
 	n := len(coins)
 	dp := make([][]int, 2)
@@ -78,6 +79,7 @@ func coinChangeV1(coins []int, amount int) (ans int) {
 	}
 	return -1
 }
+
 func coinChangeV2(coins []int, amount int) (ans int) {
 	dp := make([]int, amount+1)
 	for i := range dp {

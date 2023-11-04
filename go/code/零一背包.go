@@ -15,7 +15,7 @@ func zero_one_knapsack(c int, w []int, v []int) int {
 	return dfs(n-1, c)
 }
 
-// leetcode 494
+// leetcode 494 目标和
 func findTargetSumWays(nums []int, target int) int {
 	// pos == (sum + target) / 2
 	n := len(nums)
@@ -122,6 +122,7 @@ func findTargetSumWaysV3(nums []int, target int) int {
 	}
 	return dp[n%2][p]
 }
+
 func findTargetSumWaysV4(nums []int, target int) int {
 	for _, x := range nums {
 		target += x

@@ -28,11 +28,7 @@ func rob(nums []int) int {
 // 递推
 func robV1(nums []int) int {
 	n := len(nums)
-	if n == 1 {
-		return nums[0]
-	}
 	dp := make([]int, n+2)
-	dp[0], dp[1] = 0, 0
 	for i, v := range nums {
 		dp[i+2] = max(dp[i]+v, dp[i+1])
 	}
@@ -41,18 +37,12 @@ func robV1(nums []int) int {
 
 // 递推优化
 func robV2(nums []int) int {
-	n := len(nums)
-	if n == 1 {
-		return nums[0]
-	}
 	f0, f1 := 0, 0
-	var f int
 	for _, v := range nums {
-		f = max(f0+v, f1)
-		f0 = f1
-		f1 = f
+		f := max(f0+v, f1)
+		f0, f1 = f1, f
 	}
-	return f
+	return f1
 }
 
 // lc 1143 最长公共子序列
@@ -214,12 +204,14 @@ func minDistanceV2(word1 string, word2 string) int {
 // 思路：1.枚举 子问题是以nums[i]结尾的子序列最长长度，枚举之前的所有nums[j]结尾的子序列，
 // 只要一个入参，选择枚举来做
 // 2.选与不选 会比较两个值的大小，所以需要两个入参
+// 3.这题也可以用单调栈+二分查找做，见对应代码
 func lengthOfLIS(nums []int) (ans int) {
 	n := len(nums)
 	memo := make([]int, n)
 	var dfs func(i int) int
+	// 返回值保存长度，不能使用全局变量，有嵌套函数会对变量进行修改
 	dfs = func(i int) (res int) {
-		if i > n-1 {
+		if i > n-1 { // 倒着枚举可以不写这句
 			return 0
 		}
 		if memo[i] > 0 {
@@ -257,4 +249,8 @@ func lengthOfLISV1(nums []int) (ans int) {
 		ans = max(ans, dp[i])
 	}
 	return
+	// return dp[n-1]
+	// SOLVE: dp[n-1]不一定最大，因为dp[i] = max(dp[j])+1，而j<i && nums[j]<nums[i]
+	// 等式右边没有取所有比i小的数，所以不一定最大
+	// 另外dp[n-1]意为取最后一位时的最大长度，不一定最大
 }
