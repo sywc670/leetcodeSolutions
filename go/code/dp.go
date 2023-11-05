@@ -254,3 +254,15 @@ func lengthOfLISV1(nums []int) (ans int) {
 	// 等式右边没有取所有比i小的数，所以不一定最大
 	// 另外dp[n-1]意为取最后一位时的最大长度，不一定最大
 }
+
+// lc 70. 爬楼梯
+func climbStairs(n int) int {
+	prev := 1
+	cur := 1
+	for i := 2; i < n+1; i++ {
+		temp := cur
+		cur = prev + cur
+		prev = temp
+	}
+	return cur
+}
