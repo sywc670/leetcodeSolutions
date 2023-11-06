@@ -87,3 +87,72 @@ func longestConsecutiveV1(nums []int) (ans int) {
 	}
 	return
 }
+
+// lc 1207. 独一无二的出现次数
+func uniqueOccurrences(arr []int) bool {
+	set := make(map[int]int)
+	newSet := make(map[int]bool)
+	for _, n := range arr {
+		set[n]++
+	}
+	for _, v := range set {
+		if !newSet[v] {
+			newSet[v] = true
+			continue
+		}
+		return false
+	}
+	return true
+}
+
+// opt
+func uniqueOccurrencesV2(arr []int) bool {
+	set := make(map[int]int)
+	newSet := make(map[int]bool)
+	for _, n := range arr {
+		set[n]++
+	}
+	for _, v := range set {
+		newSet[v] = true
+	}
+	return len(set) == len(newSet)
+}
+
+// lc 1657. 确定两个字符串是否接近
+// 种类相同，词频相同，顺序无关
+func closeStrings(word1 string, word2 string) bool {
+	if len(word1) != len(word2) {
+		return false
+	}
+	set1, set2 := make(map[byte]int), make(map[byte]int)
+	for _, w := range word1 {
+		set1[byte(w)]++
+	}
+	for _, w := range word2 {
+		set2[byte(w)]++
+	}
+	for k := range set1 {
+		if set2[k] == 0 {
+			return false
+		}
+	}
+	// 可以省略，因为词频不同的话，有上面那个判断已经完成了
+	// for k := range set2 {
+	// 	if set1[k] == 0 {
+	// 		return false
+	// 	}
+	// }
+	times1, times2 := make(map[int]int), make(map[int]int)
+	for _, v := range set1 {
+		times1[v]++
+	}
+	for _, v := range set2 {
+		times2[v]++
+	}
+	for k, v1 := range times1 {
+		if v1 != times2[k] {
+			return false
+		}
+	}
+	return true
+}
