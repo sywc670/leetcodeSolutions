@@ -36,3 +36,43 @@ func subarraySumV2(nums []int, k int) (ans int) {
 	}
 	return
 }
+
+// lc 724. 寻找数组的中心下标
+// 思路是前缀和
+// 其它思路：1. 维持前缀和与后缀和，不用考虑端点
+// 2. leetcode官方解法
+func pivotIndex(nums []int) int {
+	prefixSum := make([]int, len(nums))
+	sum := 0
+	for i, n := range nums {
+		sum += n
+		prefixSum[i] = sum
+	}
+	// error: 如果数组的和为0，中心下标为0
+	// solve: 中心下标不计入左右数组和中
+	if sum-prefixSum[0] == 0 {
+		return 0
+	}
+	// 已经排除两个端点
+	for i := 1; i < len(nums)-1; i++ {
+		if prefixSum[i-1]+prefixSum[i] == sum { // 核心代码
+			return i
+		}
+	}
+	// 判断最后一个数是否为中心下标
+	if sum-nums[len(nums)-1] == 0 {
+		return len(nums) - 1
+	}
+	return -1
+}
+
+// 1732. 找到最高海拔
+func largestAltitude(gain []int) int {
+	sum := 0
+	top := 0
+	for _, delta := range gain {
+		sum += delta
+		top = max(top, sum)
+	}
+	return top
+}

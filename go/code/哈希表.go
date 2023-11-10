@@ -1,5 +1,7 @@
 package code
 
+import "fmt"
+
 // lc 1
 // 与167题区别在于无序，且要返回下标所以不能排序
 // 思路在于两个数相加变成nums[i] == target - nums[j]
@@ -155,4 +157,26 @@ func closeStrings(word1 string, word2 string) bool {
 		}
 	}
 	return true
+}
+
+// 2352. 相等行列对
+// solve: 只需要rset，不需要cset
+// []int无法作为map的key，所以得转化为string类型
+// 未掌握
+func equalPairs(grid [][]int) (ans int) {
+	rset := make(map[string]int)
+	for _, r := range grid {
+		// wrong: rowStr := string(r)
+		rset[fmt.Sprint(r)]++
+	}
+	for j := range grid {
+		col := []int{}
+		for i := range grid {
+			col = append(col, grid[i][j])
+		}
+		if count := rset[fmt.Sprint(col)]; count > 0 {
+			ans += count
+		}
+	}
+	return
 }

@@ -21,3 +21,17 @@ func isValid(s string) bool {
 	}
 	return len(stack) == 0
 }
+
+// 2390. 从字符串中移除星号
+func removeStars(s string) string {
+	stack := make([]byte, 0, len(s))
+	for _, r := range s {
+		if r == '*' && len(stack) > 0 {
+			stack = stack[:len(stack)-1]
+		}
+		if r != '*' {
+			stack = append(stack, byte(r))
+		}
+	}
+	return string(stack)
+}

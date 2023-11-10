@@ -134,3 +134,22 @@ func search(nums []int, target int) int {
 	}
 	return -1
 }
+
+func guess(n int) int
+
+// 374. 猜数字大小
+func guessNumber(n int) int {
+	left, right := -1, n
+	for left+1 < right {
+		mid := left + (right-left)>>1
+		res := guess(mid)
+		if res == 1 {
+			left = mid
+		} else if res == -1 {
+			right = mid
+		} else {
+			return mid
+		}
+	}
+	return n
+}

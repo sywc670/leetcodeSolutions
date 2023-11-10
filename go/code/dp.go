@@ -266,3 +266,19 @@ func climbStairs(n int) int {
 	}
 	return cur
 }
+
+// 1137. 第 N 个泰波那契数
+func tribonacci(n int) int {
+	t0, t1, t2 := 0, 1, 1
+	if n == 0 {
+		return t0
+	}
+	if n == 1 || n == 2 {
+		return 1
+	}
+	for i := 0; i < n-2; i++ {
+		newT := t0 + t1 + t2
+		t0, t1, t2 = t1, t2, newT
+	}
+	return t2
+}
