@@ -71,3 +71,23 @@ func reverseKGroup(head *ListNode, k int) *ListNode {
 	// TODO: 用上一题的代码修改
 	return head
 }
+
+// 328. 奇偶链表
+// 未掌握
+// solve:巧妙的点在于每次走了两步，但是判断是否为空却不是那两步，最后一步放在下一次循环里面进行判断
+func oddEvenList(head *ListNode) *ListNode {
+	if head == nil {
+		return nil
+	}
+	evenhead := head.Next
+	eventail := evenhead
+	oddtail := head
+	for eventail != nil && eventail.Next != nil {
+		oddtail.Next = eventail.Next
+		oddtail = oddtail.Next
+		eventail.Next = oddtail.Next
+		eventail = eventail.Next
+	}
+	oddtail.Next = evenhead
+	return head
+}

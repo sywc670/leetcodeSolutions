@@ -76,3 +76,22 @@ func largestAltitude(gain []int) int {
 	}
 	return top
 }
+
+// 238. 除自身以外数组的乘积
+// solve: 定义好L\R具体代表什么，L[i]代表i左侧数组乘积和，不包含i
+func productExceptSelf(nums []int) []int {
+	n := len(nums)
+	L, R := make([]int, n), make([]int, n)
+	L[0], R[n-1] = 1, 1
+	for i := 1; i < n; i++ {
+		L[i] = L[i-1] * nums[i-1]
+	}
+	for i := n - 2; i >= 0; i-- {
+		R[i] = R[i+1] * nums[i+1]
+	}
+	ans := make([]int, n)
+	for i := 0; i < n; i++ {
+		ans[i] = L[i] * R[i]
+	}
+	return ans
+}

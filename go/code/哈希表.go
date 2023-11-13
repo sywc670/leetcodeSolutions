@@ -180,3 +180,21 @@ func equalPairs(grid [][]int) (ans int) {
 	}
 	return
 }
+
+// 41. 缺失的第一个正数
+// 原地hash，时间复杂度O(n)，空间复杂度O(1)
+func firstMissingPositive(nums []int) int {
+	// 取值范围为[1,N+1]，故hash规则：map[x-1] = x
+	for i := 0; i < len(nums); i++ {
+		for 1 <= nums[i] && nums[i] <= len(nums) && nums[nums[i]-1] != nums[i] {
+			nums[i], nums[nums[i]-1] = nums[nums[i]-1], nums[i]
+		}
+	}
+	for i := 0; i < len(nums); i++ {
+		if i+1 != nums[i] {
+			return i + 1
+		}
+	}
+	// 置换后连续自然数情况
+	return len(nums) + 1
+}
