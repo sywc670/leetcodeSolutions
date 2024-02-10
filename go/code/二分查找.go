@@ -1,6 +1,10 @@
 package code
 
-import "math"
+import (
+	"math"
+	"slices"
+	"sort"
+)
 
 // 小技巧：要找第一个满足的值使用>=或<=，找最后一个满足的值可以通过+1-1来变换等式
 // 规避边界条件也可以使用辅助函数
@@ -152,4 +156,15 @@ func guessNumber(n int) int {
 		}
 	}
 	return n
+}
+
+// lc 2300. 咒语和药水的成功对数
+func successfulPairs(spells []int, potions []int, success int64) (res []int) {
+	slices.Sort(potions)
+	res = make([]int, len(spells))
+	for i, s := range spells {
+		x := int(math.Ceil(float64(success) / float64(s))) // 向上取整
+		res[i] = len(potions) - sort.SearchInts(potions, x)
+	}
+	return
 }
