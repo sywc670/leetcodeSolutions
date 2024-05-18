@@ -139,7 +139,9 @@ func search(nums []int, target int) int {
 	return -1
 }
 
-func guess(n int) int
+func guess(n int) int {
+	return 1
+}
 
 // 374. 猜数字大小
 func guessNumber(n int) int {

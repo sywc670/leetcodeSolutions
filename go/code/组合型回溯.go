@@ -71,9 +71,3 @@ func generateParenthesis(n int) (ans []string) {
 	dfs(0, 0)
 	return
 }
-
-// lc 39. 组合总和
-func combinationSum(candidates []int, target int) (ans [][]int) {
-	// TODO
-	return
-}

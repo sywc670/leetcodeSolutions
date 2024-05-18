@@ -66,12 +66,6 @@ func reverseBetweenV2(head *ListNode, left int, right int) *ListNode {
 	return dummy.Next
 }
 
-// lc 25
-func reverseKGroup(head *ListNode, k int) *ListNode {
-	// TODO: 用上一题的代码修改
-	return head
-}
-
 // 328. 奇偶链表
 // 未掌握
 // solve:巧妙的点在于每次走了两步，但是判断是否为空却不是那两步，最后一步放在下一次循环里面进行判断
