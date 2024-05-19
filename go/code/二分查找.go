@@ -139,7 +139,7 @@ func search(nums []int, target int) int {
 	return -1
 }
 
-func guess(n int) int {
+func guess(int) int {
 	return 1
 }
 

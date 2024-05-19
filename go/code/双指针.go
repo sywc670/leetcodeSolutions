@@ -40,6 +40,7 @@ func compress(chars []byte) (ans int) {
 	return
 }
 
+// 392. 判断子序列
 func isSubsequence(s string, t string) bool {
 	sp, tp := 0, 0
 	for sp < len(s) && tp < len(t) {
