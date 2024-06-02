@@ -8,6 +8,7 @@ type ListNode struct {
 // trick: dummynode or sentry
 
 // lc 206
+// 头插法
 func reverseList(head *ListNode) *ListNode {
 	h := new(ListNode)
 	for p := head; p != nil; {
@@ -17,6 +18,35 @@ func reverseList(head *ListNode) *ListNode {
 		p = tmp
 	}
 	return h.Next
+}
+
+// 迭代 反转指针
+func reverseListV2(head *ListNode) *ListNode {
+	cur := head
+	var pre *ListNode
+	for cur != nil {
+		tmp := cur.Next
+		cur.Next = pre
+		pre = cur
+		cur = tmp
+	}
+	return pre
+}
+
+// 递归
+func reverseListV3(head *ListNode) *ListNode {
+	var recur func(*ListNode, *ListNode) *ListNode
+	recur = func(cur, pre *ListNode) *ListNode {
+		if cur == nil {
+			// 终止条件，返回反转后的头结点，其实就是反转前最后一个节点
+			return pre
+		}
+		res := recur(cur.Next, cur)
+		// 当前操作，将当前节点指向上一个节点以反转
+		cur.Next = pre
+		return res
+	}
+	return recur(head, nil)
 }
 
 // lc 92
