@@ -282,3 +282,28 @@ func tribonacci(n int) int {
 	}
 	return t2
 }
+
+// 746. 使用最小花费爬楼梯
+// 原问题：n阶台阶上完之后最小cost，用dfs(n)表示
+// 子问题：在第i阶时最小cost
+// 当前操作：如果从i-1来，那么dfs(i) = dfs(i-1) + cost[i-1]，如果i-2来，那么dfs(i) = dfs(i-2) + cost[i-2]
+func minCostClimbingStairs(cost []int) (ans int) {
+	var dfs func(i int) int
+	cache := make([]int, len(cost)+1)
+	for i := range cache {
+		cache[i] = -1
+	}
+	dfs = func(i int) int {
+		if i == 0 || i == 1 {
+			return 0
+		}
+		v := cache[i]
+		if v != -1 {
+			return v
+		}
+		res := min(dfs(i-1)+cost[i-1], dfs(i-2)+cost[i-2])
+		cache[i] = res
+		return res
+	}
+	return dfs(len(cost))
+}
