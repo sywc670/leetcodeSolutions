@@ -60,3 +60,41 @@ func maxVowels(s string, k int) (ans int) {
 	}
 	return
 }
+
+// 1004. 最大连续1的个数 III
+// 下面方法是统计1，统计0的更好
+func longestOnes(nums []int, k int) (ans int) {
+	left, right := 0, 0
+	var ones int
+	for ; right < len(nums); right++ {
+		l := right - left + 1
+		if nums[right] == 1 {
+			ones++
+		}
+		if l <= ones+k {
+			ans = max(ans, l)
+			continue
+		}
+		for l > ones+k && l > 1 {
+			if nums[left] == 1 {
+				ones--
+			}
+			left++
+			l = right - left + 1
+		}
+	}
+	return
+}
+
+func longestOnesV1(nums []int, k int) (ans int) {
+	left, cnt0 := 0, 0
+	for right, x := range nums {
+		cnt0 += 1 - x
+		for cnt0 > k {
+			cnt0 -= 1 - nums[left]
+			left++
+		}
+		ans = max(ans, right-left+1)
+	}
+	return
+}
