@@ -1,5 +1,7 @@
 package code
 
+import "math"
+
 // lc 20. 有效的括号
 func isValid(s string) bool {
 	stack := []rune{}
@@ -66,4 +68,30 @@ func asteroidCollision(asteroids []int) (stack []int) {
 	}
 
 	return
+}
+
+// 155. 最小栈
+// 思路1：辅助栈用来保存每次入栈的最小值
+// 思路2：栈中保存入栈的值以及最小值
+type MinStack []intPair
+type intPair [2]int
+
+func ConstructorMinStack() MinStack {
+	return MinStack{intPair{-1, math.MaxInt}}
+}
+
+func (ms *MinStack) Push(val int) {
+	*ms = append(*ms, intPair{val, min(ms.GetMin(), val)})
+}
+
+func (ms *MinStack) Pop() {
+	*ms = (*ms)[:len(*ms)-1]
+}
+
+func (ms MinStack) Top() int {
+	return ms[len(ms)-1][0]
+}
+
+func (ms MinStack) GetMin() int {
+	return ms[len(ms)-1][1]
 }

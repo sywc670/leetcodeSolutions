@@ -293,3 +293,142 @@ func longestZigZag(root *TreeNode) (ans int) {
 
 	return
 }
+
+// 114. 二叉树展开为链表
+// 思路有先序遍历返回节点列表，再一个一个串联
+// 这里用后序遍历，先将左右子树变成链表，再接上
+func flatten(node *TreeNode) {
+	if node == nil {
+		return
+	}
+	flatten(node.Left)
+	flatten(node.Right)
+
+	tmp := node.Right
+	node.Right = node.Left
+	node.Left = nil
+	p := node
+	for p.Right != nil {
+		p = p.Right
+	}
+	p.Right = tmp
+}
+
+// 48. 旋转图像
+func rotate(matrix [][]int) {
+	n := len(matrix)
+	// 水平翻转
+	for i := 0; i < n/2; i++ {
+		matrix[i], matrix[n-1-i] = matrix[n-1-i], matrix[i]
+	}
+	// 主对角线翻转
+	for i := 0; i < n; i++ {
+		for j := 0; j < i; j++ {
+			matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+		}
+	}
+}
+
+// 2. 两数相加
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+	head := &ListNode{}
+	p1, p2, p := l1, l2, head
+	var carry int
+	for p1 != nil || p2 != nil {
+		n := &ListNode{}
+		v := carry
+		if p1 != nil {
+			v += p1.Val
+			p1 = p1.Next
+		}
+		if p2 != nil {
+			v += p2.Val
+			p2 = p2.Next
+		}
+		carry = 0
+		if v >= 10 {
+			carry = 1
+			v = v - 10
+		}
+		n.Val = v
+		p.Next = n
+		p = p.Next
+	}
+	if carry > 0 {
+		p.Next = &ListNode{Val: carry}
+	}
+	return head.Next
+}
+
+// 21. 合并两个有序链表
+func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
+	head := &ListNode{}
+	p1, p2, p := list1, list2, head
+	for p1 != nil && p2 != nil {
+		if p1.Val < p2.Val {
+			p.Next = p1
+			p1 = p1.Next
+		} else {
+			p.Next = p2
+			p2 = p2.Next
+		}
+		p = p.Next
+	}
+	if p1 != nil {
+		p.Next = p1
+	}
+	if p2 != nil {
+		p.Next = p2
+	}
+	return head.Next
+}
+
+// 160. 相交链表
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+	length := func(head *ListNode) (l int) {
+		p := head
+		for p != nil {
+			p = p.Next
+			l++
+		}
+		return
+	}
+	la, lb := length(headA), length(headB)
+	pa, pb := headA, headB
+	// 找到更长的先走
+	first, last, diff := pa, pb, la-lb
+	if lb > la {
+		first, last, diff = pb, pa, lb-la
+	}
+	for diff > 0 {
+		first = first.Next
+		diff--
+	}
+	// 一起走
+	for first != nil {
+		if first == last {
+			return first
+		}
+		first, last = first.Next, last.Next
+	}
+	return nil
+}
+
+// https://leetcode.cn/problems/intersection-of-two-linked-lists/solutions/2958778/tu-jie-yi-zhang-tu-miao-dong-xiang-jiao-m6tg1
+// 第二种思路：(a+c)+b = (b+c)+a
+func getIntersectionNodeV1(headA, headB *ListNode) *ListNode {
+	p, q := headA, headB
+	for p != q {
+		if p != nil {
+			p = p.Next
+		} else {
+			p = headB
+		}
+		if q != nil {
+			q = q.Next
+		} else {
+			q = headA
+		}
+	}
+	return p
+}

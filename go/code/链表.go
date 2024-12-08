@@ -20,33 +20,21 @@ func reverseList(head *ListNode) *ListNode {
 	return h.Next
 }
 
-// 迭代 反转指针
-func reverseListV2(head *ListNode) *ListNode {
-	cur := head
-	var pre *ListNode
-	for cur != nil {
-		tmp := cur.Next
-		cur.Next = pre
-		pre = cur
-		cur = tmp
-	}
-	return pre
-}
-
 // 递归
-func reverseListV3(head *ListNode) *ListNode {
-	var recur func(*ListNode, *ListNode) *ListNode
-	recur = func(cur, pre *ListNode) *ListNode {
+// 就是把链表的每个指针反转，在反转当前的节点指针前，把后续链表节点给反转了，把尾节点信息返回作为反转后的头结点
+func reverseListV2(head *ListNode) *ListNode {
+	var reverse func(*ListNode, *ListNode) *ListNode
+	reverse = func(cur, pre *ListNode) *ListNode {
 		if cur == nil {
 			// 终止条件，返回反转后的头结点，其实就是反转前最后一个节点
 			return pre
 		}
-		res := recur(cur.Next, cur)
+		res := reverse(cur.Next, cur)
 		// 当前操作，将当前节点指向上一个节点以反转
 		cur.Next = pre
 		return res
 	}
-	return recur(head, nil)
+	return reverse(head, nil)
 }
 
 // lc 92

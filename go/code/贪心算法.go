@@ -93,3 +93,37 @@ func findMinArrowShots(points [][]int) (cnt int) {
 	}
 	return
 }
+
+// 45. 跳跃游戏 II
+// 其实可以不用递归
+func jump(nums []int) (step int) {
+	last := len(nums) - 1
+	var maxPos int
+	var dfs func(int, int)
+	dfs = func(start int, end int) {
+		if end >= last {
+			return
+		}
+		for start <= end {
+			maxPos = max(maxPos, start+nums[start])
+			start++
+		}
+		step++
+		dfs(start, maxPos)
+	}
+	dfs(0, 0)
+	return
+}
+
+func jumpV1(nums []int) (step int) {
+	curRight := 0
+	nextRight := 0
+	for i, n := range nums[:len(nums)-1] { // 只需要遍历到倒数第二个
+		nextRight = max(nextRight, i+n)
+		if i == curRight { // 到达当前右端边界
+			step++
+			curRight = nextRight
+		}
+	}
+	return
+}

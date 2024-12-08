@@ -1,6 +1,9 @@
 package code
 
-import "sort"
+import (
+	"math"
+	"sort"
+)
 
 // 思路：单调栈题目，首先有一串数字，当数字是单调减少时，入栈，
 // 当遇到比栈顶更大的数字时，出栈之前的一些数字，并做一些工作
@@ -138,13 +141,27 @@ func lengthOfLISV2(nums []int) int {
 }
 
 // 901. 股票价格跨度
+// 每一次找到上一个比当前更大的价格，消除栈中比当前小的价格，因为没有用处了
 type StockSpanner struct {
+	stack  []stockPair
+	curDay int
+}
+
+type stockPair struct {
+	day   int
+	price int
 }
 
 func ConstructorStock() StockSpanner {
-	return StockSpanner{}
+	return StockSpanner{stack: []stockPair{{day: -1, price: math.MaxInt}}, curDay: -1}
 }
 
-func (this *StockSpanner) Next(price int) int {
-	return 0
+func (s *StockSpanner) Next(price int) (ans int) {
+	for price >= s.stack[len(s.stack)-1].price {
+		s.stack = s.stack[:len(s.stack)-1]
+	}
+	s.curDay++
+	ans = s.curDay - s.stack[len(s.stack)-1].day
+	s.stack = append(s.stack, stockPair{day: s.curDay, price: price})
+	return
 }
