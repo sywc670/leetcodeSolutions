@@ -1,6 +1,9 @@
 package code
 
-import "fmt"
+import (
+	"fmt"
+	"slices"
+)
 
 // lc 1
 // 与167题区别在于无序，且要返回下标所以不能排序
@@ -17,9 +20,10 @@ func twoSumV(nums []int, target int) []int {
 	return nil
 }
 
-// lc 49 字母异位词分组
+// 49. 字母异位词分组
+// 本质上是将每个词访问的时间顺序差异给消除，可以通过排序来规定一个顺序，也可以用一个数组甚至一个数来保存，
+// 只要这个数可以将字母信息都装下就行
 // 1. 判断两个字母异位词通过计数，保存所有26字母列表
-// 2. 对每个字符串排序
 // 保存的map中会存有返回值数组的下标来分组
 func groupAnagrams(strs []string) (ans [][]string) {
 	set := make(map[[26]int]int)
@@ -29,18 +33,34 @@ func groupAnagrams(strs []string) (ans [][]string) {
 		for _, r := range str {
 			key[r-'a']++
 		}
-		if ret, ok := set[key]; ok {
+		if ret, ok := set[key]; ok { // 如果相同，就放在同一切片中
 			ans[ret] = append(ans[ret], str)
 			continue
 		}
 		count++
 		set[key] = count
-		ans = append(ans, []string{str})
+		ans = append(ans, []string{str}) // 如果不同，放在新切片中
 	}
 	return
 }
 
-// lc 128 最长连续序列
+// 2. 对每个字符串排序
+func groupAnagramsV1(strs []string) (ans [][]string) {
+	m := make(map[string][]string)
+	for _, str := range strs {
+		b := []byte(str)
+		slices.Sort(b)
+		sortedStr := string(b)
+		// map里有没有都无所谓，没有的话append也会自动创建出来
+		m[sortedStr] = append(m[sortedStr], str)
+	}
+	for _, strs := range m {
+		ans = append(ans, strs)
+	}
+	return
+}
+
+// 128.最长连续序列
 // 存哈希表，然后遍历左右算长度，超时了
 func longestConsecutive(nums []int) (ans int) {
 	set := make(map[int]struct{}, len(nums))
@@ -86,6 +106,25 @@ func longestConsecutiveV1(nums []int) (ans int) {
 			right++
 		}
 		ans = max(ans, right-n+1)
+	}
+	return
+}
+
+func longestConsecutiveV2(nums []int) (ans int) {
+	has := make(map[int]bool)
+	for _, n := range nums {
+		has[n] = true
+	}
+
+	for x := range has {
+		if has[x-1] {
+			continue
+		}
+		y := x + 1
+		for has[y] {
+			y++
+		}
+		ans = max(ans, y-x)
 	}
 	return
 }

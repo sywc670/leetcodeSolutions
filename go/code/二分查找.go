@@ -212,3 +212,19 @@ func minEatingSpeed(piles []int, h int) int {
 	}
 	return right // 最小的 true
 }
+
+// 35. 搜索插入位置
+func searchInsert(nums []int, target int) int {
+	left, right := -1, len(nums)
+	for left+1 < right {
+		mid := (right-left)>>1 + left
+		if nums[mid] == target {
+			return mid
+		} else if nums[mid] > target {
+			right = mid
+		} else {
+			left = mid
+		}
+	}
+	return right
+}

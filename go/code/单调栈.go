@@ -44,7 +44,7 @@ func dailyTemperaturesV1(temperatures []int) []int {
 	return ans
 }
 
-// lc 42
+// 42. 接雨水
 // 思路：横向计算水面积，需要左边最近的顶和右边最近的顶以及中间的底
 // 从左到右遍历，遇到比栈顶大，出栈并计算
 func trapV1(height []int) (ans int) {

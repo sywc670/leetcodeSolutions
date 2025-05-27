@@ -2,6 +2,7 @@ package code
 
 import (
 	"math"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -415,6 +416,7 @@ func getIntersectionNode(headA, headB *ListNode) *ListNode {
 }
 
 // https://leetcode.cn/problems/intersection-of-two-linked-lists/solutions/2958778/tu-jie-yi-zhang-tu-miao-dong-xiang-jiao-m6tg1
+// 算法题图片：160.png
 // 第二种思路：(a+c)+b = (b+c)+a
 func getIntersectionNodeV1(headA, headB *ListNode) *ListNode {
 	p, q := headA, headB
@@ -431,4 +433,52 @@ func getIntersectionNodeV1(headA, headB *ListNode) *ListNode {
 		}
 	}
 	return p
+}
+
+// 240. 搜索二维矩阵 II
+// 二分
+func searchMatrix(matrix [][]int, target int) bool {
+	for _, row := range matrix {
+		i := sort.SearchInts(row, target)
+		if i < len(row) && row[i] == target {
+			return true
+		}
+	}
+	return false
+}
+
+// 排除法
+// 与右上角比较,从而进行排除
+func searchMatrixV1(matrix [][]int, target int) bool {
+	i, j := 0, len(matrix[0])-1
+	for i < len(matrix) && j >= 0 {
+		if matrix[i][j] == target {
+			return true
+		}
+		if matrix[i][j] > target {
+			j--
+		} else {
+			i++
+		}
+	}
+	return false
+}
+
+// 24. 两两交换链表中的节点
+// 递归做法
+func swapPairs(head *ListNode) *ListNode {
+	dummy := &ListNode{Next: head}
+	var reverse func(*ListNode)
+	reverse = func(head *ListNode) {
+		p := head.Next
+		if p != nil && p.Next != nil {
+			q := p.Next
+			p.Next = q.Next
+			q.Next = p
+			head.Next = q
+			reverse(p)
+		}
+	}
+	reverse(dummy)
+	return dummy.Next
 }

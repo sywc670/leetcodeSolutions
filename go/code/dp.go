@@ -258,6 +258,7 @@ func lengthOfLISV1(nums []int) (ans int) {
 }
 
 // lc 70. 爬楼梯
+// dp[i] = dp[i-2]+dp[i-1],dp[0],dp[1]=1下面是空间优化后的
 func climbStairs(n int) int {
 	prev := 1
 	cur := 1

@@ -85,7 +85,7 @@ func (na *NumArray) SumRange(left int, right int) int {
 // lc 560. 和为 K 的子数组
 // 题意：有几种 i、j 的组合，使得从第 i 到 j 项的子数组和等于 k。
 // 转化为有几种 i、j 的组合，满足 prefixSum[j] - prefixSum[i - 1] == k
-// 前缀和+哈希表
+// 前缀和+哈希表（两数之和）
 // 任意连续数组和可以通过两个前缀和的差来表示，前缀和专门解决这种连续数组求和的问题
 // nums[i]+…+nums[j]=prefixSum[j]−prefixSum[i−1]
 // 故意让 prefixSum[-1] 为 0，使得通式在i=0时也成立
