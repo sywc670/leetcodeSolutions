@@ -68,8 +68,8 @@ func moveZeroes(nums []int) {
 	}
 }
 
-// lc 438
-// 提示：数组和切片可以直接比较
+// 438. 找到字符串中所有字母异位词
+// 提示：数组可以直接比较
 func findAnagrams(s string, p string) (ans []int) {
 	m, n := len(s), len(p)
 	if n > m {
