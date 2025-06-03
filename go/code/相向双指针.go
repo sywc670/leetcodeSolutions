@@ -163,7 +163,7 @@ func maxArea(height []int) (ans int) {
 	return
 }
 
-// lc 42
+// 42. 接雨水
 func trap(height []int) (ans int) {
 	l, r := 0, len(height)-1
 	L, R := 0, 0

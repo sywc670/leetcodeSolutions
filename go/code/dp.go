@@ -2,7 +2,7 @@ package code
 
 import "slices"
 
-// lc 198
+// 198. 打家劫舍
 // 记忆化搜索/回溯
 func rob(nums []int) int {
 	n := len(nums)

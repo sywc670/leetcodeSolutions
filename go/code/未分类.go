@@ -296,8 +296,7 @@ func longestZigZag(root *TreeNode) (ans int) {
 }
 
 // 114. 二叉树展开为链表
-// 思路有先序遍历返回节点列表，再一个一个串联
-// 这里用后序遍历，先将左右子树变成链表，再接上
+// 这里用先序遍历，先将左右子树变成链表，再接上
 func flatten(node *TreeNode) {
 	if node == nil {
 		return
@@ -313,6 +312,37 @@ func flatten(node *TreeNode) {
 		p = p.Right
 	}
 	p.Right = tmp
+}
+
+func flattenV1(node *TreeNode) {
+	flattenWithTail(node)
+}
+
+func flattenWithTail(node *TreeNode) *TreeNode {
+	if node == nil {
+		return nil
+	}
+
+	leftTail := flattenWithTail(node.Left)
+	rightTail := flattenWithTail(node.Right)
+
+	// 如果左子树存在，把它插入到右边，然后接上原来的右子树
+	if node.Left != nil {
+		right := node.Right
+		node.Right = node.Left
+		node.Left = nil
+		leftTail.Right = right
+	}
+
+	if rightTail != nil {
+		return rightTail
+	}
+
+	if leftTail != nil {
+		return leftTail
+	}
+
+	return node
 }
 
 // 48. 旋转图像
